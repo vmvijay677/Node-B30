@@ -2,6 +2,8 @@ import cors from "cors";
 import express from "express";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import { createNewMovies, updateMovieById, deleteMovieById, getAllMovies, getMovieByID } from "./helper.js";
+import { moviesRouter } from "./routes/movies.js";
 
 dotenv.config();
 //console.log(process.env.MONGO_URL);
@@ -83,72 +85,12 @@ async function createConnection() {
     console.log("Mongo is connected 👍");
     return client;
 }
-const client = await createConnection();
+export const client = await createConnection();
 
 app.get("/", function (request, response) {
     response.send("Hello World 🌍❤!!!");
 });
 
-//cursor -> pagination -> convert into array (toArray)
-app.get("/movies", async function (request, response) {
-    //db.movies.find({})
-    const movies = await client
-        .db("b30wd")
-        .collection("movies")
-        .find({})
-        .toArray();
-    response.send(movies);
-});
-
-app.get("/movies/:id", async function (request, response) {
-    //console.log(request.params);
-    //db.movies.findOne({id:"102"})
-    const { id } = request.params;
-    //const movie = movies.find(mv => mv.id === id);
-    const movie = await client
-        .db("b30wd")
-        .collection("movies")
-        .findOne({ id: id });
-    console.log(movie);
-    movie 
-        ? response.send(movie) 
-        : response.status(404).send({ message: "No such movie found 😅" });
-});
-
-app.delete("/movies/:id", async function (request, response) {
-    //console.log(request.params);
-    //db.movies.deleteOne({id:"102"})
-    const { id } = request.params;
-    //const movie = movies.find(mv => mv.id === id);
-    const result = await client
-        .db("b30wd")
-        .collection("movies")
-        .deleteOne({ id: id });
-    response.send(result);
-});
-
-app.put("/movies/:id", async function (request, response) {
-    //console.log(request.params);
-    //db.movies.updateOne({id:"102"}, {$set: updatedData})
-    const { id } = request.params;
-    const updateData = request.body;
-    //const movie = movies.find(mv => mv.id === id);
-    const result = await client
-        .db("b30wd")
-        .collection("movies")
-        .updateOne({ id: id }, {$set: updateData});
-    response.send(result);
-});
-
-app.post("/movies", async function (request, response) {
-    //db.movies.insertMany(data)
-    const data = request.body;
-    console.log(data);
-    const result = await client
-        .db("b30wd")
-        .collection("movies")
-        .insertMany(data);
-    response.send(result);
-});
+app.use("/movies", moviesRouter);
 
 app.listen(PORT, () => console.log(`Server started in ${PORT}`));
