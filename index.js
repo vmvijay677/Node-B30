@@ -1,6 +1,8 @@
+import cors from "cors";
 import express from "express";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+
 dotenv.config();
 //console.log(process.env.MONGO_URL);
 
@@ -66,6 +68,8 @@ const movies = [
         "trailer": "https://www.youtube.com/embed/NgsQ8mVkN8w"
     }
 ];
+
+app.use(cors());
 
 //middleware -> intercept -> converting body to json
 app.use(express.json());
@@ -148,4 +152,3 @@ app.post("/movies", async function (request, response) {
 });
 
 app.listen(PORT, () => console.log(`Server started in ${PORT}`));
-
