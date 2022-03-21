@@ -7,6 +7,13 @@ export async function createNewMovies(data) {
         .insertMany(data);
 }
 
+export async function createUser(data) {
+    return await client
+        .db("b30wd")
+        .collection("users")
+        .insertOne(data);
+}
+
 export async function updateMovieById(id, updateData) {
     return await client
         .db("b30wd")
