@@ -73,6 +73,28 @@ const movies = [
     }
 ];
 
+const mobiles = [
+    {
+      model: "OnePlus 9 5G",
+      img: "https://m.media-amazon.com/images/I/61fy+u9uqPL._SX679_.jpg",
+      company: "OnePlus"
+    },
+    {
+      model: "Iphone 13 Mini",
+      img: "https://www.reliancedigital.in/medias/Apple-iPhone-13-Mini-Smartphones-491997720-i-5-1200Wx1200H?context=bWFzdGVyfGltYWdlc3wxNDkwMjR8aW1hZ2UvanBlZ3xpbWFnZXMvaDM2L2hjOC85NjM3MzM2Nzc2NzM0LmpwZ3w5YTQzZWFhY2NjZTc5NzFkZDNhMWMxYWUzYzQ4NDdhZWRlZDc4ZTJkODBiNWI4NTg3MmU5MzE5ZTQ5ODVhZmFk",
+      company: "Apple"
+    },
+    {
+      model: "Samsung S21 Ultra",
+      img: "https://m.media-amazon.com/images/I/81kfA-GtWwL._SY606_.jpg",
+      company: "Samsung"
+    },
+    {
+      model: "Xiaomi Mi 11",
+      img: "https://m.media-amazon.com/images/I/51K4vNxMAhS._AC_SX522_.jpg",
+      company: "Xiaomi"
+    }];
+
 app.use(cors());  //3rd party middleware
 
 //middleware -> intercept -> converting body to json
@@ -97,13 +119,32 @@ app.use("/movies", moviesRouter);
 
 app.use("/users", usersRouter);
 
+app.get("/mobiles", async function (request, response) {
+    //db.mobiles.find({})
+    const mobiles = await client
+        .db("b30wd")
+        .collection("mobiles")
+        .find({})
+        .toArray();
+    response.send(mobiles);
+});
+
+app.post("/mobiles", async function (request, response) {
+    const data = request.body;
+    const result = await client
+        .db("b30wd")
+        .collection("mobiles")
+        .insertMany(data);
+    response.send(result);
+});
+
 app.listen(PORT, () => console.log(`Server started in ${PORT}`));
 
-async function genPassword(password){
-    //bcrypt.genSalt(noofrounds)
-    const salt = await bcrypt.genSalt(10);  //4s
-    const hashPassword = await bcrypt.hash(password, salt);
-    console.log({ salt, hashPassword});
-    return hashPassword;
-}
-genPassword("password@123");
+// async function genPassword(password){
+//     //bcrypt.genSalt(noofrounds)
+//     const salt = await bcrypt.genSalt(10);  //4s
+//     const hashPassword = await bcrypt.hash(password, salt);
+//     console.log({ salt, hashPassword});
+//     return hashPassword;
+// }
+// genPassword("password@123");

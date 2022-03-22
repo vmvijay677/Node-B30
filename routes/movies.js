@@ -5,13 +5,13 @@ import { auth } from "./middleware/auth.js";
 const router = express.Router();
 
 //cursor -> pagination -> convert into array (toArray)
-router.get("/", auth, async function (request, response) {
+router.get("/", async function (request, response) {
     //db.movies.find({})
     const movies = await getAllMovies();
     response.send(movies);
 });
 
-router.get("/:id", auth, async function (request, response) {
+router.get("/:id", async function (request, response) {
     //console.log(request.params);
     //db.movies.findOne({id:"102"})
     const { id } = request.params;
