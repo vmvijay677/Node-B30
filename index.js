@@ -73,10 +73,10 @@ const movies = [
     }
 ];
 
-app.use(cors());
+app.use(cors());  //3rd party middleware
 
 //middleware -> intercept -> converting body to json
-app.use(express.json());
+app.use(express.json());  //inbuilt middleware
 
 //const MONGO_URL = "mongodb://localhost";
 const MONGO_URL = process.env.MONGO_URL;
